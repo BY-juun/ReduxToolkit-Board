@@ -67,3 +67,25 @@ export const SubmitBtn = styled.button`
   border-radius: 4px;
   border: none;
 `;
+
+export const ContentWrapper = styled.div`
+  text-align: left;
+  div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+    input {
+      padding: 13px 20px;
+      background: #f5f5f5;
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    span {
+      font-size: 18px;
+    }
+  }
+`;

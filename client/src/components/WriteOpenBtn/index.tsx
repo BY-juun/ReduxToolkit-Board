@@ -11,10 +11,10 @@ const WriteOpenBtn = () => {
 
   const onClickOpen = useCallback(() => {
     dispatch(handleModal(true));
-  }, []);
+  }, [dispatch]);
   const onClose = useCallback(() => {
     dispatch(handleModal(false));
-  }, []);
+  }, [dispatch]);
   return (
     <>
       <OpenBtn onClick={onClickOpen}>WriteOpenBtn</OpenBtn>
