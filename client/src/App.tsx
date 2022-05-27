@@ -17,8 +17,8 @@ function App() {
       <Header />
       <Wrapper>
         <WriteOpenBtn />
-        {Posts?.map((Post) => {
-          return <PostCard title={Post.title} content={Post.content} />;
+        {Posts?.map((Post, idx) => {
+          return <PostCard key={idx} Post={Post} />;
         })}
       </Wrapper>
     </>
