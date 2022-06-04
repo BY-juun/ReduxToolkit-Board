@@ -1,6 +1,8 @@
 import React, { useCallback, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { addPosts } from "../../service/post";
 import { submitPost, updatePost } from "../../slice/post";
+import { AppDispatch } from "../../store";
 import { CommentFormTitle, ContentWrapper, ModalContent, ModalRoot, OverLay, SubmitBtn } from "./styles";
 
 interface Props {
@@ -9,13 +11,13 @@ interface Props {
 }
 
 const Modal = ({ onClose, id }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   const submit = useCallback(() => {
     if (!titleRef.current || !contentRef.current) return;
-    dispatch(submitPost({ title: titleRef.current.value, content: contentRef.current.value }));
+    dispatch(addPosts({ title: titleRef.current.value, content: contentRef.current.value }));
     return onClose();
   }, []);
 

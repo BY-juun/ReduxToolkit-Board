@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addPosts, delPosts, getPosts } from "../service/post";
 
 let id = 0;
 
@@ -32,6 +33,17 @@ export const postSlice = createSlice({
       state.Posts[findIdx].content = action.payload.content;
       state.Posts[findIdx].title = action.payload.title;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getPosts.fulfilled, (state, action) => {
+      state.Posts = action.payload;
+    });
+    builder.addCase(addPosts.fulfilled, (state, action) => {
+      state.Posts = [{ id: state.Posts[0].id + 1, title: action.payload.title, content: action.payload.content }, ...state.Posts];
+    });
+    builder.addCase(delPosts.fulfilled, (state, action) => {
+      state.Posts = state.Posts.filter((Post) => Post.id !== action.payload.id);
+    });
   },
 });
 

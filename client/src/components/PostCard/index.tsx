@@ -1,8 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ReducerType } from "../../rootReducer";
+import { delPosts } from "../../service/post";
 import { delPost } from "../../slice/post";
 import { handleModal, UtilStateType } from "../../slice/util";
+import { AppDispatch } from "../../store";
 import Modal from "../Modal";
 import { PostCardWrapper } from "./styles";
 
@@ -17,10 +19,10 @@ interface Props {
 const PostCard = ({ Post }: Props) => {
   const { id, title, content } = Post;
   const [openModal, setOpenModal] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onClickDel = useCallback(() => {
-    return dispatch(delPost({ id: id }));
+    return dispatch(delPosts(id));
   }, [dispatch, Post]);
 
   const onClickEdit = useCallback(() => {
