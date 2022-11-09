@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { addPosts } from "../../service/post";
+import { addPosts, useAddPostsMutation, useGetPostsQuery } from "../../service/post";
 import { submitPost, updatePost } from "../../slice/post";
 import { AppDispatch } from "../../store";
 import { CommentFormTitle, ContentWrapper, ModalContent, ModalRoot, OverLay, SubmitBtn } from "./styles";
@@ -11,13 +11,16 @@ interface Props {
 }
 
 const Modal = ({ onClose, id }: Props) => {
+  const [submitPost] = useAddPostsMutation();
+  const { refetch } = useGetPostsQuery();
   const dispatch = useDispatch<AppDispatch>();
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
-  const submit = useCallback(() => {
+  const submit = useCallback(async () => {
     if (!titleRef.current || !contentRef.current) return;
-    dispatch(addPosts({ title: titleRef.current.value, content: contentRef.current.value }));
+    await submitPost({ title: titleRef.current.value, content: contentRef.current.value });
+    //refetch();
     return onClose();
   }, []);
 
