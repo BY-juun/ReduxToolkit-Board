@@ -32,7 +32,12 @@ export const postApi = createApi({
   endpoints: (build) => ({
     getPosts: build.query<PostType[], void>({
       query: () => "/posts",
-      providesTags: ["Post"],
+      //providesTags: (result, error) => (result ? [...result.map(({ id }) => ({ type: "Post", id }))] : [{ type: "Post", id: 0 }]),
+      providesTags: (result) => (result ? [...result.map(({ id }) => ({ type: "Post" as const, id }))] : []),
+    }),
+    getOnePost: build.query<PostType, number>({
+      query: (id: number) => ({ url: `/post/${id}` }),
+      providesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     addPosts: build.mutation({
       query: (reqData: { title: string; content: string }) => ({
@@ -42,7 +47,15 @@ export const postApi = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
+    patchPost: build.mutation({
+      query: (reqData: { title: string; content: string; id: number }) => ({
+        url: `/post/${reqData.id}`,
+        method: "PATCH",
+        body: reqData,
+      }),
+      invalidatesTags: (result, error, reqData) => [{ type: "Post", id: reqData.id }],
+    }),
   }),
 });
 
-export const { useGetPostsQuery, useAddPostsMutation } = postApi;
+export const { useGetPostsQuery, useAddPostsMutation, usePatchPostMutation } = postApi;

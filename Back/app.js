@@ -2,7 +2,7 @@ const express = require("express");
 const { Post } = require("./models");
 const db = require("./models");
 const morgan = require("morgan");
-const cors = require('cors');
+const cors = require("cors");
 const app = express();
 
 app.use(morgan("dev"));
@@ -18,11 +18,12 @@ db.sequelize
     console.error(err);
   });
 
-  app.use(cors({
+app.use(
+  cors({
     origin: true,
     credentials: true, //이걸 해줘야 cookie도 같이 보낼 수 있다.
-}));
-
+  })
+);
 
 app.get("/", (req, res, next) => {
   res.send("Hi~");
@@ -41,7 +42,7 @@ app.get("/posts", async (req, res, next) => {
 });
 
 app.post("/post", async (req, res, next) => {
-  console.log('dfd');
+  console.log("dfd");
   try {
     const post = await Post.findOne({
       where: { title: req.body.title },
@@ -88,9 +89,11 @@ app.delete("/post/:id", async (req, res, next) => {
 });
 
 app.patch("/post/:id", async (req, res, next) => {
+  const { title, content } = req.body;
+  const { id } = req.params;
   try {
     const post = await Post.findOne({
-      where: { id: req.params.id },
+      where: { id },
     });
 
     if (!post) {
@@ -98,11 +101,11 @@ app.patch("/post/:id", async (req, res, next) => {
     }
     await Post.update(
       {
-        title: req.body.title,
-        content: req.body.content,
+        title,
+        content,
       },
       {
-        where: { id: req.params.id },
+        where: { id: id },
       }
     );
 
@@ -111,6 +114,22 @@ app.patch("/post/:id", async (req, res, next) => {
     console.error(err);
     next(err);
   }
+});
+
+const comments = [];
+app.get("/comments", (req, res, next) => {
+  return res.status(200).json(comments);
+});
+
+app.post("/comments", (req, res, next) => {
+  comments.push(req.body.comment);
+  return res.send("success");
+});
+
+app.patch("/comments/:id", (req, res, next) => {
+  const { id } = req.params;
+  comments[id] = req.body;
+  return res.send("success");
 });
 
 app.use((req, res, next) => {
